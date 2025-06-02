@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Date Invitation</title>
+  <style>
+ @keyframes pop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(0); opacity: 0; }
+    }
+
+    @keyframes balloonFloat {
+      0% { transform: translateY(100vh) rotate(0deg); }
+      100% { transform: translateY(-100vh) rotate(360deg); }
+    }
+
+    @keyframes balloonPop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.5); }
+      100% { transform: scale(0); opacity: 0; }
+    }
+
+    .pop-effect {
+      animation: pop 0.5s ease-out forwards;
+    }
+
+    .balloon {
+      position: fixed;
+      font-size: 30px;
+      z-index: 1000;
+      animation: balloonFloat 4s linear forwards;
+    }
+
+    .balloon-pop {
+      animation: balloonPop 0.5s ease-out forwards;
+    }
+
+
+    /* ... existing animations ... */
+
+    #noBtn {
+      transition: all 0.3s ease;
+      position: relative;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #f44336;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    #noBtn:hover {
+      background-color: #d32f2f;
+    }
+
+    #yesBtn {
+      z-index: 1001;
+      padding: 15px 30px;
+      font-size: 18px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      position: relative;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: all 0.5s ease;
+    }
+
+    #yesBtn:hover {
+      transform: scale(1.1);
+      background-color: #45a049;
+    }
+
+    /* ... rest of existing styles ... */
+  </style>
+</head>
+<body style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; font-family:Arial, sans-serif; background-color:#fff0f5; overflow: hidden;">
+
+  <h2 id="question" style="text-align:center; font-size:24px; margin-bottom:30px;">Will you go on a date with me? 🥺❤️</h2>
+
+  <div class="button-container">
+    <button id="yesBtn" onclick="sayYes()">Yes 💝</button>
+    <button id="noBtn" onmouseover="moveButton()" onclick="handleNo()">No</button>
+  </div>
+
+  <script>
+    const messages = [
+      "Are you sure?💔",
+      "Please?🥺",
+      "Really?😭💗",
+      "Think again...😤💓",
+      "Last chance!��💕",
+      "Ok fine😭😭😭"
+    ];
+
+    const hoverTexts = [
+      "No way! 😢",
+      "Don't click! 😡",
+      "Stop it! 😔",
+      "Please don't! 😭",
+      "I'm scared! 💔",
+      "Nooooo! 😱",
+      "Don't touch! 😫",
+      "Go away! 😤",
+      "Leave me! 😩",
+      "Stop! 😖"
+    ];
+
+    function createBalloon() {
+      const balloon = document.createElement('div');
+      balloon.className = 'balloon';
+      balloon.textContent = '🎈';
+      balloon.style.left = Math.random() * window.innerWidth + 'px';
+      document.body.appendChild(balloon);
+      
+      // Add pop effect after a random time
+      setTimeout(() => {
+        balloon.className = 'balloon-pop';
+        // Create small balloons when popped
+        for (let i = 0; i < 3; i++) {
+          createSmallBalloon(balloon.style.left);
+        }
+      }, Math.random() * 2000 + 1000);
+      
+      setTimeout(() => balloon.remove(), 4000);
+    }
+
+    function createSmallBalloon(left) {
+      const smallBalloon = document.createElement('div');
+      smallBalloon.className = 'balloon';
+      smallBalloon.textContent = '🎈';
+      smallBalloon.style.left = left;
+      smallBalloon.style.fontSize = '15px';
+      document.body.appendChild(smallBalloon);
+      setTimeout(() => smallBalloon.remove(), 2000);
+    }
+
+    function createConfetti() {
+      const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff'];
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * window.innerWidth + 'px';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 3000);
+      }
+    }
+
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.textContent = '❤️';
+      heart.style.left = Math.random() * window.innerWidth + 'px';
+      heart.style.bottom = '0';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 3000);
+    }
+
+    function startCelebration() {
+      // Create more balloons for Yes button click
+      const balloonInterval = setInterval(createBalloon, 200);
+      //const confettiInterval = setInterval(createConfetti, 1000);
+      //const heartInterval = setInterval(createHeart, 300);
+
+      // Stop celebrations after 5 seconds
+      setTimeout(() => {
+        clearInterval(balloonInterval);
+        //clearInterval(confettiInterval);
+        //clearInterval(heartInterval);
+      }, 5000);
+    }
+
+    function sayYes() {
+      const question = document.getElementById("question");
+      const noBtn = document.getElementById("noBtn");
+      const yesBtn = document.getElementById("yesBtn");
+
+      // Add pop effect to Yes button
+      yesBtn.classList.add('pop-effect');
+      
+      // Start celebration with more intensity
+      startCelebration();
+      
+      // Add float effect to Yes button
+      yesBtn.classList.add('float-effect');
+      
+      // Update question with celebration text
+      question.innerText = "Yay! Let's plan our date! 🥰💖💖💖";
+      question.style.animation = "float 2s ease-in-out infinite";
+      
+      // Hide No button with pop effect
+      noBtn.classList.add('pop-effect');
+      setTimeout(() => {
+        noBtn.style.display = "none";
+      }, 500);
+
+      // Create a big celebration message
+      const celebration = document.createElement('div');
+      celebration.style.position = 'fixed';
+      celebration.style.top = '50%';
+      celebration.style.left = '50%';
+      celebration.style.transform = 'translate(-50%, -50%)';
+      celebration.style.fontSize = '48px';
+      celebration.style.color = '#ff69b4';
+      celebration.style.textShadow = '2px 2px 4px rgba(0,0,0,0.2)';
+      celebration.style.zIndex = '9999';
+      celebration.style.animation = 'float 2s ease-in-out infinite';
+      celebration.textContent = '💖 YES! 💖';
+      document.body.appendChild(celebration);
+
+      // Remove celebration message after 3 seconds
+      setTimeout(() => {
+        celebration.classList.add('pop-effect');
+        setTimeout(() => celebration.remove(), 500);
+      }, 3000);
+    }
+
+
+
+    let clickCount = 0;
+    let isRotating = false;
+    let hoverCount = 0;
+    let yesButtonSize = 18; // Initial font size for Yes button
+
+    // ... existing celebration functions ...
+
+    function moveButton() {
+      const noBtn = document.getElementById("noBtn");
+      const yesBtn = document.getElementById("yesBtn");
+      
+      // Change No button text on hover
+      noBtn.textContent = hoverTexts[hoverCount % hoverTexts.length];
+      hoverCount++;
+
+      // Make Yes button larger on each hover
+      yesButtonSize += 5;
+      yesBtn.style.fontSize = yesButtonSize + "px";
+      yesBtn.style.padding = (15 + hoverCount * 2) + "px " + (30 + hoverCount * 2) + "px";
+      
+      // Get container and button dimensions
+      const yesBtnRect = yesBtn.getBoundingClientRect();
+      const noBtnRect = noBtn.getBoundingClientRect();
+      
+      // Calculate safe area
+      const safeArea = {
+        left: 0,
+        right: window.innerWidth - noBtnRect.width,
+        top: 0,
+        bottom: window.innerHeight - noBtnRect.height
+      };
+
+      // Define area to avoid (Yes button area with padding)
+      const avoidArea = {
+        left: yesBtnRect.left - 20,
+        right: yesBtnRect.right + 20,
+        top: yesBtnRect.top - 20,
+        bottom: yesBtnRect.bottom + 20
+      };
+
+      // Generate random position
+      let newX, newY;
+      let attempts = 0;
+      const maxAttempts = 10;
+
+      do {
+        newX = Math.floor(Math.random() * (safeArea.right - safeArea.left)) + safeArea.left;
+        newY = Math.floor(Math.random() * (safeArea.bottom - safeArea.top)) + safeArea.top;
+        attempts++;
+      } while (
+        attempts < maxAttempts &&
+        newX + noBtnRect.width > avoidArea.left &&
+        newX < avoidArea.right &&
+        newY + noBtnRect.height > avoidArea.top &&
+        newY < avoidArea.bottom
+      );
+
+      // Apply new position
+      noBtn.style.position = "fixed";
+      noBtn.style.left = newX + "px";
+      noBtn.style.top = newY + "px";
+      
+      // Start rotation if not already rotating
+      if (!isRotating) {
+        noBtn.classList.add("rotating");
+        isRotating = true;
+      }
+
+      // Start celebration after certain number of hovers
+      if (hoverCount > 10) {
+        startCelebration();
+      }
+    }
+
+    function handleNo() {
+      const question = document.getElementById("question");
+      const yesBtn = document.getElementById("yesBtn");
+      const noBtn = document.getElementById("noBtn");
+
+      if (clickCount < messages.length) {
+        // Add pop effect to No button
+        noBtn.classList.add('pop-effect');
+        setTimeout(() => {
+          noBtn.classList.remove('pop-effect');
+        }, 500);
+
+        question.innerText = messages[clickCount];
+        clickCount++;
+
+        // Start celebration after certain number of clicks
+        if (clickCount > 10) {
+          startCelebration();
+        }
+      }
+    }
+
+    function sayYes() {
+      const question = document.getElementById("question");
+      const noBtn = document.getElementById("noBtn");
+      const yesBtn = document.getElementById("yesBtn");
+
+      // Start celebration
+      startCelebration();
+      
+      // Add float effect to Yes button
+      yesBtn.classList.add('float-effect');
+      
+      question.innerText = "Yay! Let's plan our date! 🥰💖💖💖";
+      noBtn.style.display = "none";
+    }
+
+    // Reset button position when mouse leaves the window
+    window.onmouseout = function(e) {
+      if (e.relatedTarget === null) {
+        const noBtn = document.getElementById("noBtn");
+        noBtn.style.position = "relative";
+        noBtn.style.left = "";
+        noBtn.style.top = "";
+        noBtn.classList.remove("rotating");
+        isRotating = false;
+        noBtn.textContent = "No"; // Reset text
+      }
+    };
+  </script>
+
+</body>
+</html>
