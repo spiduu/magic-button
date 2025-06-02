@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Date Invitation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background-color: #fff0f5;
+      overflow-x: hidden;
+      padding: 20px;
+      touch-action: manipulation;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 800px;
+      text-align: center;
+      padding: 20px;
+      margin: 0 auto;
+    }
+
+    #question {
+      font-size: clamp(24px, 4vw, 36px);
+      margin-bottom: 40px;
+      line-height: 1.4;
+      word-wrap: break-word;
+      padding: 0 15px;
+      color: #333;
+    }
+
+    .button-container {
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 30px;
+      width: 100%;
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: clamp(18px, 2.5vw, 24px);
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      min-width: 120px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    #yesBtn {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    #yesBtn:hover, #yesBtn:active {
+      transform: scale(1.1);
+      background-color: #45a049;
+    }
+
+    #noBtn {
+      background-color: #f44336;
+      color: white;
+    }
+
+    #noBtn:hover, #noBtn:active {
+      background-color: #d32f2f;
+    }
+
+    /* Animations */
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0); }
+    }
+
+    @keyframes pop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes balloonFloat {
+      0% { transform: translateY(100vh) rotate(0deg); }
+      100% { transform: translateY(-100vh) rotate(360deg); }
+    }
+
+    @keyframes heartFloat {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-100px) scale(0); opacity: 0; }
+    }
+
+    .float {
+      animation: float 2s ease-in-out infinite;
+    }
+
+    .pop {
+      animation: pop 0.5s ease-out;
+    }
+
+    .balloon {
+      position: fixed;
+      font-size: clamp(24px, 4vw, 36px);
+      z-index: 1000;
+      animation: balloonFloat 4s linear forwards;
+      pointer-events: none;
+      will-change: transform;
+    }
+
+    .heart {
+      position: fixed;
+      font-size: clamp(20px, 3vw, 28px);
+      animation: heartFloat 3s ease-in-out infinite;
+      pointer-events: none;
+      will-change: transform;
+    }
+
+    .celebration-text {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: clamp(36px, 8vw, 72px);
+      color: #ff69b4;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+      z-index: 9999;
+      animation: float 2s ease-in-out infinite;
+      text-align: center;
+      width: 90%;
+      max-width: 800px;
+      pointer-events: none;
+      will-change: transform;
+    }
+
+    /* Media Queries */
+    @media (max-width: 768px) {
+      .container {
+        padding: 15px;
+      }
+
+      .button-container {
+        gap: 20px;
+      }
+
+      button {
+        padding: 12px 24px;
+        min-width: 100px;
+      }
+
+      #question {
+        margin-bottom: 30px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 15px;
+      }
+
+      .container {
+        padding: 10px;
+      }
+
+      .button-container {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      button {
+        width: 100%;
+        max-width: 200px;
+        padding: 10px 20px;
+      }
+
+      #question {
+        font-size: 20px;
+        margin-bottom: 25px;
+      }
+    }
+
+    /* For very small screens */
+    @media (max-width: 320px) {
+      button {
+        padding: 8px 16px;
+        font-size: 16px;
+      }
+
+      #question {
+        font-size: 18px;
+      }
+    }
+
+    /* For larger screens */
+    @media (min-width: 1200px) {
+      .container {
+        max-width: 1000px;
+      }
+
+      button {
+        padding: 20px 40px;
+        font-size: 24px;
+      }
+
+      #question {
+        font-size: 36px;
+      }
+    }
+
+    /* For touch devices */
+    @media (hover: none) {
+      button:active {
+        transform: scale(0.95);
+      }
+    }
+
+  /* Simplified animation for full screen growth */
+  @keyframes fillScreen {
+      0% { transform: scale(1); }
+      100% { 
+        transform: scale(20);
+        background-color: #4CAF50;
+      }
+    }
+
+    .fill-screen {
+      animation: fillScreen 1s ease-out forwards;
+      z-index: 1000;
+    }
+
+    /* Update button styles */
+    #yesBtn {
+      background-color: #4CAF50;
+      color: white;
+      padding: 20px 40px;
+      font-size: clamp(24px, 3vw, 32px);
+      min-width: 180px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+      transition: all 0.5s ease;
+    }
+
+    #yesBtn {
+      background-color: #4CAF50;
+      color: white;
+      padding: 20px 40px;
+      font-size: clamp(24px, 3vw, 32px);
+      min-width: 180px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+      transition: all 0.5s ease;
+      transform-origin: center;
+    }
+
+    /* Add growth animation */
+    @keyframes grow {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    .grow-animation {
+      animation: grow 0.5s ease-out;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 id="question">Will you go on a date with me? 🥺❤️</h2>
+
+    <div class="button-container">
+      <button id="yesBtn" onclick="sayYes()">Yes 💝</button>
+      <button id="noBtn" onclick="handleNo()">No</button>
+    </div>
+  </div>
+
+  <script>
+    const messages = [
+      "Are you sure?💔",
+      "Please?🥺",
+      "Really?😭💗",
+      "Think again...😤💓",
+      "Last chance!😫",
+      "Ok fine😭😭😭",
+      "😢",
+      "😡",
+      "😔",
+      "😭",
+      "💔"
+    ];
+    let clickCount = 0;
+    let isMobile = window.innerWidth <= 768;
+
+    // Detect device type
+    function updateDeviceType() {
+      isMobile = window.innerWidth <= 768;
+    }
+
+    window.addEventListener('resize', updateDeviceType);
+
+    function createBalloon() {
+      const balloon = document.createElement('div');
+      balloon.className = 'balloon';
+      balloon.textContent = '🎈';
+      const maxX = window.innerWidth - 40;
+      balloon.style.left = Math.min(Math.random() * maxX, maxX) + 'px';
+      document.body.appendChild(balloon);
+      setTimeout(() => balloon.remove(), 4000);
+    }
+
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.textContent = '❤️';
+      const maxX = window.innerWidth - 30;
+      heart.style.left = Math.min(Math.random() * maxX, maxX) + 'px';
+      heart.style.bottom = '0';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 3000);
+    }
+
+    function startCelebration() {
+      const balloonInterval = setInterval(createBalloon, isMobile ? 400 : 300);
+      const heartInterval = setInterval(createHeart, isMobile ? 600 : 500);
+
+      setTimeout(() => {
+        clearInterval(balloonInterval);
+        clearInterval(heartInterval);
+      }, isMobile ? 4000 : 5000);
+    }
+
+    
+    function handleNo() {
+      const question = document.getElementById("question");
+      const yesBtn = document.getElementById("yesBtn");
+      const noBtn = document.getElementById("noBtn");
+
+      if (clickCount < messages.length) {
+        noBtn.innerText = messages[clickCount];
+        clickCount++;
+
+        // Calculate growth based on click count
+        const baseSize = isMobile ? 24 : 32;
+        const growthFactor = 1.5; // Increase this to make the button grow more
+        const newSize = baseSize + (clickCount * growthFactor);
+        
+        // Apply new size to Yes button
+        yesBtn.style.fontSize = `${newSize}px`;
+        
+        // Increase padding proportionally
+        const paddingGrowth = isMobile ? 2 : 3;
+        const newPadding = 10 + (clickCount * paddingGrowth);
+        yesBtn.style.padding = `${newPadding}px ${newPadding * 2}px`;
+        
+        // Increase minimum width
+        const minWidthGrowth = isMobile ? 20 : 30;
+        yesBtn.style.minWidth = `${180 + (clickCount * minWidthGrowth)}px`;
+        
+        // Add grow animation
+        yesBtn.classList.remove('grow-animation');
+        void yesBtn.offsetWidth; // Trigger reflow
+        yesBtn.classList.add('grow-animation');
+
+        // Check if this is the last message
+        if (clickCount === messages.length) {
+          // Hide No button
+          noBtn.style.display = "none";
+          
+          // Make Yes button fill screen
+          yesBtn.style.fontSize = '100px';
+          yesBtn.style.padding = '50px 100px';
+          yesBtn.style.minWidth = '80vw';
+          yesBtn.style.width = '80vw';
+          yesBtn.style.height = '80vh';
+          yesBtn.style.display = 'flex';
+          yesBtn.style.alignItems = 'center';
+          yesBtn.style.justifyContent = 'center';
+          yesBtn.style.position = 'fixed';
+          yesBtn.style.top = '50%';
+          yesBtn.style.left = '50%';
+          yesBtn.style.transform = 'translate(-50%, -50%)';
+          yesBtn.style.zIndex = '1000';
+          
+          // Hide question text
+          question.style.display = "none";
+        }
+      }
+    }
+
+
+    function sayYes() {
+      const question = document.getElementById("question");
+      const yesBtn = document.getElementById("yesBtn");
+      const noBtn = document.getElementById("noBtn");
+
+      // Remove any existing final state
+      const existingFinalState = document.querySelector('.final-state');
+      if (existingFinalState) {
+        existingFinalState.remove();
+      }
+
+      // Add pop effect to Yes button
+      yesBtn.classList.add('pop');
+      
+      // Start celebration
+      startCelebration();
+
+      // Add float effect to question and button
+      question.classList.add('float');
+      yesBtn.classList.add('float');
+      
+      // Update question text
+      question.innerText = "Yay! Let's plan our date! 🥰💖��💖";
+      question.style.display = "block";
+      
+      // Hide No button with pop effect
+      noBtn.classList.add('pop');
+      setTimeout(() => {
+        noBtn.style.display = "none";
+      }, 500);
+
+      // Create celebration text
+      const celebration = document.createElement('div');
+      celebration.className = 'celebration-text';
+      celebration.textContent = '💖 YES! 💖';
+      document.body.appendChild(celebration);
+
+      // Remove celebration text after 3 seconds
+      setTimeout(() => {
+        celebration.classList.add('pop');
+        setTimeout(() => celebration.remove(), 500);
+      }, 3000);
+    }
+
+    // Prevent double-tap zoom on mobile
+    document.addEventListener('touchend', function(e) {
+      e.preventDefault();
+    }, { passive: false });
+
+    // Handle orientation change
+    window.addEventListener('orientationchange', function() {
+      setTimeout(updateDeviceType, 100);
+    });
+  </script>
+</body>
+</html>
